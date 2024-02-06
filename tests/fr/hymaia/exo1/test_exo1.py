@@ -13,6 +13,8 @@ class TestMain(unittest.TestCase):
                 Row(text='bonjour suis test')
             ]
         )
+
+        #WHEN
         expected = spark.createDataFrame(
             [
                 Row(word='bonjour', count=2),
@@ -25,6 +27,6 @@ class TestMain(unittest.TestCase):
         )
 
         actual = wordcount(input, 'text')
-
+        
+        #THEN
         self.assertCountEqual(actual.collect(), expected.collect())
-
