@@ -10,7 +10,7 @@ def main():
     df_result_with_department = extract_department(df_cleaned)
     
     df_aggregated = calculate_population_per_department(df_result_with_department)
-   
+    
     write_to_csv(df_aggregated, "data/exo2/aggregate")
 
 

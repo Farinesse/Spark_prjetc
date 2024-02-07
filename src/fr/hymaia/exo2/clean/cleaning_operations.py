@@ -32,9 +32,6 @@ def extract_department(df_result):
     return df_result
 
 
-cd
-
-
 def write_to_parquet(df, output_path):
 
     df.write.parquet(output_path, mode="overwrite")

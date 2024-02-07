@@ -9,6 +9,8 @@ def wordcount(df, col_name):
 def main():
     # Initialiser la session Spark
     spark = SparkSession.builder.appName("WordCount").getOrCreate()
+    
+    input_path = "src/resources/exo1/data.csv"
 
     # Lire le fichier CSV
     df = spark.read.option("header", True).csv(input_path)
