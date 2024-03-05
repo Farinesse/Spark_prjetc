@@ -19,7 +19,7 @@ class TestCleaningOperations(unittest.TestCase):
 
         # THEN
         expected_data = [
-            Row(name='Cussac', age=27, zip='75020')
+            Row(naame='Cussac', age=27, zip='75020')
             ]
         expected_df = spark.createDataFrame(expected_data)
         self.assertEqual(cleaned_df.collect(), expected_df.collect())

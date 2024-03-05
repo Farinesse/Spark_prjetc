@@ -5,7 +5,7 @@ from .clean.cleaning_operations import clean_data, join_and_select_columns, extr
 def main():
     spark = SparkSession.builder.appName("SparkJob").getOrCreate()
 
-    df_cleaned = spark.read.parquet("data/exo2/output")
+    df_cleaned = spark.read.parquet("data/exo2/clean.parquet")
 
     df_result_with_department = extract_department(df_cleaned)
     

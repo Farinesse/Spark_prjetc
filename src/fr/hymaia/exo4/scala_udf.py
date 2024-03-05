@@ -1,23 +1,43 @@
+import time
 from pyspark.sql import SparkSession
-from pyspark.sql.window import Window
-from pyspark.sql import functions as F
+from pyspark.sql.types import StringType
+from pyspark.sql.functions import col
+from pyspark.sql.column import Column, _to_java_column, _to_seq
+
+
+def addCategoryName(col):
+    
+    sc = spark.sparkContext
+    
+    add_category_name_udf = sc._jvm.fr.hymaia.sparkfordev.udf.Exo4.addCategoryNameCol()
+    
+    return Column(add_category_name_udf.apply(_to_seq(sc, [col], _to_java_column)))
 
 
 def main():
-    spark = SparkSession.builder.master("local[*]").appName("window_functions").getOrCreate()
+    spark = SparkSession.builder.master("local[*]").appName("scala_udf").config('spark.jars', 'src/resources/exo4/udf.jar').getOrCreate()
 
-    sell_df = spark.read.csv("/src/resources/exo4/sell.csv", header=True, inferSchema=True)
-
-    sell_df = sell_df.withColumn("category_name", F.when(F.col("category") < 6, "food").otherwise("furniture"))
-
-    window_spec_day_category = Window.partitionBy("date", "category_name")
-
-    sell_df = sell_df.withColumn("total_price_per_category_per_day", F.sum("price").over(window_spec_day_category))
-
-    window_spec_last_30_days = Window.partitionBy("category_name").orderBy("date").rowsBetween(-30, 0)
-
-    sell_df = sell_df.withColumn("total_price_per_category_per_day_last_30_days", F.sum("price").over(window_spec_last_30_days))
-
-    sell_df.show()
-
+    df = spark.read.csv("./src/resources/exo4/sell.csv", header=True)
+    
+    df = df.withColumn("category_name", addCategoryName(col("category")))
+    
+    start_time = time.time()
+    
+    #df.show()
+    
+    #df.count() 
+    
+    df.write.csv("data/exo4/scala", header=True, mode="overwrite")
+    
+    end_time = time.time()
+    
+    elapsed_time = end_time - start_time
+    
+    print("Temps écoulé pour écrire le DataFrame:", elapsed_time, "secondes")
+    
     spark.stop()
+
+
+
+if __name__ == "__main__":
+    main()
