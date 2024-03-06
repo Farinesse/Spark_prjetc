@@ -23,7 +23,7 @@ def main():
     start_time = time.time()
 
     df.write.csv("data/exo4/python", header=True, mode="overwrite")
-    df.count()
+    #df.count()
     end_time = time.time()
     elapsed_time = end_time - start_time
     print("Temps écoulé pour écrire le DataFrame:", elapsed_time, "secondes")
